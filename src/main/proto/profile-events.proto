@@ -1,0 +1,35 @@
+syntax = "proto3";
+
+option java_multiple_files = true;
+option java_package = "org.sleepless_artery.auth_service";
+option java_outer_classname = "UserVerificationServiceProto";
+
+
+service UserCreationService {
+  rpc CreateUser (CreateUserRequest) returns (CreateUserResponse);
+}
+
+service EmailVerificationService {
+  rpc isEmailAddressAvailable (EmailAddressAvailabilityRequest) returns (EmailAddressAvailabilityResponse);
+}
+
+
+message CreateUserRequest {
+  string email_address = 1;
+}
+
+message CreateUserResponse {
+  bool success = 1;
+  string message = 2;
+}
+
+
+message EmailAddressAvailabilityRequest {
+  string oldEmailAddress = 1;
+  string newEmailAddress = 2;
+}
+
+message EmailAddressAvailabilityResponse {
+  bool availability = 1;
+  string message = 2;
+}

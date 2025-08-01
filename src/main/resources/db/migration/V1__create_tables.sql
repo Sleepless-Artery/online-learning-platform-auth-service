@@ -3,7 +3,7 @@ CREATE TABLE roles (
   role_name VARCHAR(255) NOT NULL UNIQUE
 );
 
-INSERT INTO roles (role_name) VALUES ('USER'), ('ADMIN'), ('STUDENT'), ('AUTHOR');
+INSERT INTO roles (role_name) VALUES ('USER'), ('ADMIN');
 
 CREATE TABLE credentials(
   id BIGSERIAL PRIMARY KEY,

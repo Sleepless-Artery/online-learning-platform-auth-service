@@ -12,6 +12,7 @@ git clone https://github.com/Sleepless-Artery/online-learning-platform-auth-serv
 ## Требования
 - Java 17+
 - Maven 3.9.x
+- Docker
 ## Технологии
 - Java
 - Spring Boot
@@ -20,3 +21,4 @@ git clone https://github.com/Sleepless-Artery/online-learning-platform-auth-serv
 - Flyway
 - YML
 - Maven
+- Docker

@@ -18,7 +18,10 @@ git clone https://github.com/Sleepless-Artery/online-learning-platform-auth-serv
 - Spring Boot
 - Spring Cloud
 - Spring Security
+- Kafka
+- Redis
 - Flyway
+- SQL
 - YML
 - Maven
 - Docker

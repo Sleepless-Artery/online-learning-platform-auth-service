@@ -18,3 +18,5 @@ git clone https://github.com/Sleepless-Artery/online-learning-platform-auth-serv
 - Spring Cloud
 - Spring Security
 - Flyway
+- YML
+- Maven

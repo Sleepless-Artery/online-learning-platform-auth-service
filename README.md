@@ -20,6 +20,7 @@ git clone https://github.com/Sleepless-Artery/online-learning-platform-auth-serv
 - Spring Security
 - Kafka
 - Redis
+- gRPC
 - Flyway
 - SQL
 - YML

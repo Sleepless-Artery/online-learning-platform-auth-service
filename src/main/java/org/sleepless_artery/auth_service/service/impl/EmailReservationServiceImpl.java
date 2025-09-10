@@ -28,20 +28,19 @@ public class EmailReservationServiceImpl implements EmailReservationService {
         log.info("Checking if email address '{}' available", emailAddress);
 
         return emailAddress != null
-                && redisTemplate.opsForValue().get("email_reservation:" + emailAddress) == null
+                && !redisTemplate.hasKey("email_reservation:" + emailAddress)
                 && !credentialService.existsByEmailAddress(emailAddress);
     }
 
 
     @Override
     public void reserveEmailAddress(String emailAddress, Object reservationData, Duration reservationDuration) {
-
         log.info("Reserving email address '{}'", emailAddress);
 
         Boolean reserved = redisTemplate.opsForValue().setIfAbsent(
                 "email_reservation:" + emailAddress,
                 reservationData,
-                Duration.ofMinutes(60)
+                reservationDuration
         );
 
         if (Boolean.FALSE.equals(reserved)) {

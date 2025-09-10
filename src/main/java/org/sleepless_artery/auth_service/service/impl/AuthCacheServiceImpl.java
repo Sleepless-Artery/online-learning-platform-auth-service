@@ -5,6 +5,7 @@ import org.sleepless_artery.auth_service.model.Credential;
 import org.sleepless_artery.auth_service.service.AuthCacheService;
 import org.springframework.cache.Cache;
 import org.springframework.cache.CacheManager;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -19,22 +20,18 @@ import java.util.stream.Collectors;
 public class AuthCacheServiceImpl implements AuthCacheService {
 
     private final CacheManager cacheManager;
+    private final RedisTemplate<String, Object> redisTemplate;
 
 
     @Override
     public void evictUserCache(String emailAddress) {
-        Cache credentialCache = cacheManager.getCache("credentials");
-        Cache userDetailsCache = cacheManager.getCache("userDetails");
-        Cache tpkenCache = cacheManager.getCache("tokens");
+        String[] cacheNames = {"credentials", "userDetails", "tokens"};
 
-        if (credentialCache != null) {
-            credentialCache.evict(emailAddress);
-        }
-        if (userDetailsCache != null) {
-            userDetailsCache.evict(emailAddress);
-        }
-        if (tpkenCache != null) {
-            tpkenCache.evict(emailAddress);
+        for (String cacheName : cacheNames) {
+            Cache cache = cacheManager.getCache(cacheName);
+            if (cache != null) {
+                redisTemplate.delete(cacheName + "::" + emailAddress);
+            }
         }
     }
 
@@ -59,7 +56,7 @@ public class AuthCacheServiceImpl implements AuthCacheService {
     public boolean existsCredential(String emailAddress) {
         Cache credentialCache = cacheManager.getCache("credentials");
         if (credentialCache != null) {
-            return credentialCache.get(emailAddress) != null;
+            return redisTemplate.hasKey("credentials::" + emailAddress);
         }
         return false;
     }

@@ -10,6 +10,7 @@ import org.sleepless_artery.auth_service.service.AuthService;
 import org.sleepless_artery.auth_service.service.CredentialService;
 import org.sleepless_artery.auth_service.service.AuthCacheService;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -27,6 +28,7 @@ public class AuthServiceImpl implements AuthService {
 
     private final JwtTokenUtils jwtTokenUtils;
     private final AuthenticationManager authenticationManager;
+    private final RedisTemplate<String, Object> redisTemplate;
 
 
     @Override
@@ -59,6 +61,13 @@ public class AuthServiceImpl implements AuthService {
     public void logout(String emailAddress) {
         if (credentialService.existsByEmailAddress(emailAddress)) {
             authCacheService.evictUserCache(emailAddress);
+            invalidateToken(emailAddress);
         }
+    }
+
+
+    private void invalidateToken(String emailAddress) {
+        String tokenKey = "tokens::" + emailAddress;
+        redisTemplate.delete(tokenKey);
     }
 }

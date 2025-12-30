@@ -26,9 +26,9 @@ public class CredentialRoleServiceImpl implements CredentialRoleService {
     public void addRoleToUser(String emailAddress, String roleName) {
         log.info("Adding role '{}' to user with email address '{}'", roleName, emailAddress);
 
-        Credential credential = credentialService.findCredentialByEmailAddress(emailAddress);
+        var credential = credentialService.findCredentialByEmailAddress(emailAddress);
 
-        Role role = roleService.findRoleByName(roleName).orElseThrow(() -> {
+        var role = roleService.findRoleByName(roleName).orElseThrow(() -> {
             log.warn("Role '{}' not found", roleName);
             return new RoleNotFoundException();
         });
@@ -43,9 +43,9 @@ public class CredentialRoleServiceImpl implements CredentialRoleService {
     public void deleteRoleForUser(String emailAddress, String roleName) {
         log.info("Deleting role '{}' for user with email address '{}'", roleName, emailAddress);
 
-        Credential credential = credentialService.findCredentialByEmailAddress(emailAddress);
+        var credential = credentialService.findCredentialByEmailAddress(emailAddress);
 
-        Role role = roleService.findRoleByName(roleName).orElseThrow(() -> {
+        var role = roleService.findRoleByName(roleName).orElseThrow(() -> {
             log.warn("Role '{}' not found", roleName);
             return new RoleNotFoundException();
         });

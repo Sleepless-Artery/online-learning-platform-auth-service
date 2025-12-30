@@ -9,7 +9,6 @@ import org.sleepless_artery.auth_service.exception.GrpcProcessingException;
 import org.sleepless_artery.auth_service.exception.RoleNotFoundException;
 import org.sleepless_artery.auth_service.grpc.client.UserCreationServiceGrpcClient;
 import org.sleepless_artery.auth_service.model.Credential;
-import org.sleepless_artery.auth_service.model.Role;
 import org.sleepless_artery.auth_service.repository.CredentialRepository;
 import org.sleepless_artery.auth_service.service.CredentialService;
 import org.sleepless_artery.auth_service.service.RoleService;
@@ -46,7 +45,7 @@ public class CredentialServiceImpl implements CredentialService {
     public UserDetails loadUserByUsername(String emailAddress) throws UsernameNotFoundException {
         log.info("Loading user with email address: {}", emailAddress);
 
-        Credential credential = credentialRepository.findByEmailAddress(emailAddress)
+        var credential = credentialRepository.findByEmailAddress(emailAddress)
                 .orElseThrow(() -> {
                     log.warn("User not found with email address: {}", emailAddress);
                     return new CredentialNotFoundException();
@@ -76,12 +75,12 @@ public class CredentialServiceImpl implements CredentialService {
             throw new CredentialAlreadyExistsException("Credential already exists");
         }
 
-        Role role = roleService.findRoleByName("USER").orElseThrow(() -> {
+        var role = roleService.findRoleByName("USER").orElseThrow(() -> {
             log.warn("Role 'USER' not found");
             return new RoleNotFoundException();
         });
 
-        Credential credential = Credential.builder()
+        var credential = Credential.builder()
                 .emailAddress(registrationCredentialDto.getEmailAddress())
                 .passwordHash(passwordEncoder.encode(registrationCredentialDto.getPassword()))
                 .roles(Set.of(role))
@@ -92,7 +91,7 @@ public class CredentialServiceImpl implements CredentialService {
             throw new GrpcProcessingException("Error creating user on the grpc server side");
         }
 
-        Credential savedCredential = credentialRepository.save(credential);
+        var savedCredential = credentialRepository.save(credential);
         log.info("Successfully created credential for email: {}", savedCredential.getEmailAddress());
 
         authCacheService.putUserCache(savedCredential.getEmailAddress(), savedCredential);
@@ -142,10 +141,10 @@ public class CredentialServiceImpl implements CredentialService {
             throw new CredentialNotFoundException();
         }
 
-        Credential credential = findCredentialByEmailAddress(oldEmailAddress);
+        var credential = findCredentialByEmailAddress(oldEmailAddress);
         credential.setEmailAddress(newEmailAddress);
 
-        Credential updatedCredential = save(credential);
+        var updatedCredential = save(credential);
 
         authCacheService.evictUserCache(oldEmailAddress);
         authCacheService.putUserCache(newEmailAddress, updatedCredential);

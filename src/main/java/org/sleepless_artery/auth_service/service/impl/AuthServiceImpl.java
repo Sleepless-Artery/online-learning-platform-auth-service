@@ -14,7 +14,6 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 
@@ -48,8 +47,8 @@ public class AuthServiceImpl implements AuthService {
             throw new BadCredentialException("Incorrect login or password");
         }
 
-        UserDetails userDetails = credentialService.loadUserByUsername(credentialDto.getEmailAddress());
-        String token = jwtTokenUtils.generateToken(userDetails);
+        var userDetails = credentialService.loadUserByUsername(credentialDto.getEmailAddress());
+        var token = jwtTokenUtils.generateToken(userDetails);
 
         log.info("Successfully generated token for email address: {}", credentialDto.getEmailAddress());
 
@@ -67,7 +66,7 @@ public class AuthServiceImpl implements AuthService {
 
 
     private void invalidateToken(String emailAddress) {
-        String tokenKey = "tokens::" + emailAddress;
+        var tokenKey = "tokens::" + emailAddress;
         redisTemplate.delete(tokenKey);
     }
 }

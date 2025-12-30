@@ -6,7 +6,6 @@ import org.sleepless_artery.auth_service.dto.CredentialDto;
 import org.sleepless_artery.auth_service.exception.BadCredentialException;
 import org.sleepless_artery.auth_service.exception.CredentialAlreadyExistsException;
 import org.sleepless_artery.auth_service.kafka.producer.KafkaProducer;
-import org.sleepless_artery.auth_service.model.Credential;
 import org.sleepless_artery.auth_service.service.*;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -44,7 +43,7 @@ public class EmailChangeServiceImpl implements EmailChangeService {
     public void changeEmailAddress(CredentialDto credentialDto, String newEmailAddress) {
         log.info("Changing email address from '{}' to '{}'", credentialDto.getEmailAddress(), newEmailAddress);
 
-        Credential credential = credentialService.findCredentialByEmailAddress(credentialDto.getEmailAddress());
+        var credential = credentialService.findCredentialByEmailAddress(credentialDto.getEmailAddress());
 
         if (credentialDto.getPassword() == null ||
                 !passwordEncoder.matches(credentialDto.getPassword(), credential.getPasswordHash())

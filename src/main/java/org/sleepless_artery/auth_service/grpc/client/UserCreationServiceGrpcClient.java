@@ -23,7 +23,7 @@ public class UserCreationServiceGrpcClient {
         log.info("Sending gRPC request to user-service for creating user with email address '{}'", emailAddress);
 
         try {
-            CreateUserRequest request = CreateUserRequest.newBuilder()
+            var request = CreateUserRequest.newBuilder()
                     .setEmailAddress(emailAddress)
                     .build();
 

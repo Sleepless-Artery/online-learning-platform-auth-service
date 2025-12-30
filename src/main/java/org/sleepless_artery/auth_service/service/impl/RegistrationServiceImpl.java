@@ -31,7 +31,6 @@ public class RegistrationServiceImpl implements RegistrationService {
 
     @Override
     public void startRegistration(RegistrationCredentialDto credentialDto) {
-
         log.info("Registering user with email address '{}'", credentialDto.getEmailAddress());
 
         emailReservationService.reserveEmailAddress(
@@ -52,9 +51,7 @@ public class RegistrationServiceImpl implements RegistrationService {
 
     @Override
     public JwtResponse confirmRegistration(RegistrationCredentialDto credentialDto, String confirmationCode) {
-
         log.info("Confirming registration for email address: {}", credentialDto.getEmailAddress());
-
 
         emailReservationService.checkReservation(credentialDto.getEmailAddress(), confirmationCode);
 

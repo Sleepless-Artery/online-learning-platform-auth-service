@@ -190,6 +190,7 @@
 			<version>${springdoc-openapi-starter.version}</version>
 		</dependency>
 	</dependencies>
+
 	<dependencyManagement>
 		<dependencies>
 			<dependency>

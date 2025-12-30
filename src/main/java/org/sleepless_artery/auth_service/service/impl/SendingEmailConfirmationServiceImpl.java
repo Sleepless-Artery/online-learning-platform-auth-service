@@ -26,7 +26,7 @@ public class SendingEmailConfirmationServiceImpl implements SendingEmailConfirma
 
     @Override
     public void sendEmailConfirmation(String emailAddress, String postfix) {
-        String confirmationCode = verificationService.saveVerificationCode(emailAddress);
+        var confirmationCode = verificationService.saveVerificationCode(emailAddress);
 
         kafkaProducer.send(
                 String.format("%s.%s.%s", prefix, domain, postfix),

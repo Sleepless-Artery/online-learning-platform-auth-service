@@ -38,12 +38,12 @@ public class AdminInitializer {
     public void initAdminUser() {
         log.info("Initializing Admin User");
         if (!credentialRepository.existsByEmailAddress(adminEmailAddress)) {
-            Role adminRole = roleService.findRoleByName("ADMIN").orElseThrow(() -> {
+            var adminRole = roleService.findRoleByName("ADMIN").orElseThrow(() -> {
                 log.error("Admin Role not found");
                 return new RoleNotFoundException();
             });
 
-            Credential adminCredential = Credential.builder()
+            var adminCredential = Credential.builder()
                     .emailAddress(adminEmailAddress)
                     .passwordHash(passwordEncoder.encode(adminPassword))
                     .roles(Set.of(adminRole))

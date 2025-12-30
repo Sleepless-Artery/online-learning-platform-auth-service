@@ -21,7 +21,7 @@ public class VerificationServiceImpl implements VerificationService {
 
     @Override
     public String saveVerificationCode(String emailAddress) {
-        String verificationCode = generateConfirmationCode();
+        var verificationCode = generateConfirmationCode();
         redisTemplate.delete("verificationCode:" + emailAddress);
 
         log.debug("Saving verification code for email: {}", emailAddress);
@@ -44,7 +44,7 @@ public class VerificationServiceImpl implements VerificationService {
     public boolean verifyAndDeleteCode(String emailAddress, String code) {
         log.debug("Verifying and deleting code for email address: {}", emailAddress);
 
-        String storedCode = redisTemplate.opsForValue().get("verification_code:" + emailAddress);
+        var storedCode = redisTemplate.opsForValue().get("verification_code:" + emailAddress);
         if (storedCode != null && storedCode.equals(code)) {
             redisTemplate.delete("verification_code:" + emailAddress);
             return true;
@@ -56,8 +56,8 @@ public class VerificationServiceImpl implements VerificationService {
     private String generateConfirmationCode() {
         log.info("Generating confirmation code");
 
-        SecureRandom random = new SecureRandom();
-        byte[] bytes = new byte[3];
+        var random = new SecureRandom();
+        var bytes = new byte[3];
         random.nextBytes(bytes);
 
         return String.format("%06d", ((bytes[0] & 0xFF) << 16 | (bytes[1] & 0xFF) << 8 | (bytes[2] & 0xFF)) % 1000000);

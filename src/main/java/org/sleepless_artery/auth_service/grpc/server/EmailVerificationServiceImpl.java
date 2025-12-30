@@ -23,7 +23,7 @@ public class EmailVerificationServiceImpl extends EmailVerificationServiceGrpc.E
     public void isEmailAddressAvailable(
             EmailAddressAvailabilityRequest request, StreamObserver<EmailAddressAvailabilityResponse> streamObserver
     ) {
-        boolean isAvailable = emailReservationService.isEmailAddressAvailable(request.getNewEmailAddress());
+        var isAvailable = emailReservationService.isEmailAddressAvailable(request.getNewEmailAddress());
 
         try {
             streamObserver.onNext(EmailAddressAvailabilityResponse.newBuilder()
@@ -34,7 +34,8 @@ public class EmailVerificationServiceImpl extends EmailVerificationServiceGrpc.E
         } catch (Exception e) {
             streamObserver.onError(Status.INTERNAL
                     .withDescription("Error checking email availability")
-                    .asRuntimeException());
+                    .asRuntimeException()
+            );
         }
     }
 }

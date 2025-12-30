@@ -37,7 +37,7 @@ public class EmailReservationServiceImpl implements EmailReservationService {
     public void reserveEmailAddress(String emailAddress, Object reservationData, Duration reservationDuration) {
         log.info("Reserving email address '{}'", emailAddress);
 
-        Boolean reserved = redisTemplate.opsForValue().setIfAbsent(
+        var reserved = redisTemplate.opsForValue().setIfAbsent(
                 "email_reservation:" + emailAddress,
                 reservationData,
                 reservationDuration

@@ -34,7 +34,7 @@ public class RedisConfig {
     @Bean
     public RedisConnectionFactory redisConnectionFactory() {
         try {
-            String password = redisConfigProperties.getPassword();
+            var password = redisConfigProperties.getPassword();
 
             if (redisConfigProperties.isClusterMode()) {
                 return createClusterConnectionFactory(password);
@@ -48,7 +48,7 @@ public class RedisConfig {
 
 
     private RedisConnectionFactory createStandaloneConnectionFactory(String password) {
-        RedisStandaloneConfiguration standaloneConfiguration = new RedisStandaloneConfiguration(
+        var standaloneConfiguration = new RedisStandaloneConfiguration(
                 redisConfigProperties.getHost(), redisConfigProperties.getPort()
         );
 
@@ -56,19 +56,19 @@ public class RedisConfig {
             standaloneConfiguration.setPassword(RedisPassword.of(password));
         }
 
-        LettuceConnectionFactory factory = new LettuceConnectionFactory(standaloneConfiguration);
+        var factory = new LettuceConnectionFactory(standaloneConfiguration);
         factory.afterPropertiesSet();
         return factory;
     }
 
 
     private RedisConnectionFactory createClusterConnectionFactory(String password) {
-        RedisClusterConfiguration clusterConfiguration = new RedisClusterConfiguration();
+        var clusterConfiguration = new RedisClusterConfiguration();
 
         Arrays.stream(
                 redisConfigProperties.getCluster().getNodes().split(",")
         ).forEach(node -> {
-            String[] parts = node.split(":");
+            var parts = node.split(":");
             if (parts.length != 2) {
                 throw new IllegalArgumentException("Invalid cluster node format: " + node);
             }
@@ -83,63 +83,17 @@ public class RedisConfig {
             clusterConfiguration.setMaxRedirects(redisConfigProperties.getCluster().getMaxRedirects());
         }
 
-        LettuceClientConfiguration clientConfig = LettuceClientConfiguration.builder()
+        var clientConfig = LettuceClientConfiguration.builder()
                 .commandTimeout(Duration.ofSeconds(2))
                 .clientOptions(ClientOptions.builder()
                         .autoReconnect(true)
                         .build())
                 .build();
 
-        LettuceConnectionFactory factory = new LettuceConnectionFactory(clusterConfiguration, clientConfig);
+        var factory = new LettuceConnectionFactory(clusterConfiguration, clientConfig);
         factory.afterPropertiesSet();
         return factory;
     }
-
-
-//    @Bean
-//    public RedisConnectionFactory redisConnectionFactory() {
-//
-//        String password = redisConfigProperties.getPassword();
-//
-//        if (redisConfigProperties.isClusterMode()) {
-//            RedisClusterConfiguration clusterConfiguration = new RedisClusterConfiguration();
-//
-//            Arrays.stream(redisConfigProperties.getCluster().getNodes().split(","))
-//                    .forEach(node -> {
-//                        String[] parts = node.split(":");
-//                        clusterConfiguration.clusterNode(parts[0], Integer.parseInt(parts[1]));
-//                    });
-//
-//            if (password != null && !password.isBlank()) {
-//                clusterConfiguration.setPassword(RedisPassword.of(password));
-//            }
-//
-//            if (redisConfigProperties.getCluster().getMaxRedirects() != null) {
-//                clusterConfiguration.setMaxRedirects(redisConfigProperties.getCluster().getMaxRedirects());
-//            }
-//
-//            LettuceClientConfiguration clientConfiguration = LettuceClientConfiguration.builder()
-//                    .commandTimeout(Duration.ofSeconds(5))
-//                    .shutdownTimeout(Duration.ofSeconds(5))
-//                    .build();
-//
-//            LettuceConnectionFactory factory = new LettuceConnectionFactory(clusterConfiguration, clientConfiguration);
-//            factory.afterPropertiesSet();
-//            return factory;
-//        }
-//
-//        RedisStandaloneConfiguration standaloneConfiguration = new RedisStandaloneConfiguration(
-//                redisConfigProperties.getHost(), redisConfigProperties.getPort()
-//        );
-//
-//        if (password != null && !password.isBlank()) {
-//            standaloneConfiguration.setPassword(RedisPassword.of(password));
-//        }
-//
-//        LettuceConnectionFactory factory = new LettuceConnectionFactory(standaloneConfiguration);
-//        factory.afterPropertiesSet();
-//        return factory;
-//    }
 
 
     @Bean
@@ -150,6 +104,7 @@ public class RedisConfig {
         redisTemplate.setValueSerializer(new GenericJackson2JsonRedisSerializer());
         return redisTemplate;
     }
+
 
     @Bean
     public CacheManager cacheManager() {

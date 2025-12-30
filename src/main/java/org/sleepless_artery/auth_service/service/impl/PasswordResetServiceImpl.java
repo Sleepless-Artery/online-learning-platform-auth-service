@@ -5,7 +5,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.sleepless_artery.auth_service.dto.PasswordResetDto;
 import org.sleepless_artery.auth_service.exception.BadCredentialException;
 import org.sleepless_artery.auth_service.exception.CredentialNotFoundException;
-import org.sleepless_artery.auth_service.model.Credential;
 import org.sleepless_artery.auth_service.service.*;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -59,7 +58,7 @@ public class PasswordResetServiceImpl implements PasswordResetService {
             throw new BadCredentialException("Passwords do not match");
         }
 
-        Credential credential = credentialService.findCredentialByEmailAddress(passwordResetDto.getEmailAddress());
+        var credential = credentialService.findCredentialByEmailAddress(passwordResetDto.getEmailAddress());
 
         if (credential == null) {
             log.warn("Cannot find credential with email address '{}'", passwordResetDto.getEmailAddress());

@@ -3,7 +3,6 @@ package org.sleepless_artery.auth_service.service.impl;
 import lombok.RequiredArgsConstructor;
 import org.sleepless_artery.auth_service.model.Credential;
 import org.sleepless_artery.auth_service.service.AuthCacheService;
-import org.springframework.cache.Cache;
 import org.springframework.cache.CacheManager;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -25,10 +24,10 @@ public class AuthCacheServiceImpl implements AuthCacheService {
 
     @Override
     public void evictUserCache(String emailAddress) {
-        String[] cacheNames = {"credentials", "userDetails", "tokens"};
+        var cacheNames = new String[] {"credentials", "userDetails", "tokens"};
 
-        for (String cacheName : cacheNames) {
-            Cache cache = cacheManager.getCache(cacheName);
+        for (var cacheName : cacheNames) {
+            var cache = cacheManager.getCache(cacheName);
             if (cache != null) {
                 redisTemplate.delete(cacheName + "::" + emailAddress);
             }
@@ -38,15 +37,15 @@ public class AuthCacheServiceImpl implements AuthCacheService {
 
     @Override
     public void putUserCache(String emailAddress, Credential credential) {
-        Cache credentialCache = cacheManager.getCache("credentials");
-        Cache userDetailsCache = cacheManager.getCache("userDetails");
+        var credentialCache = cacheManager.getCache("credentials");
+        var userDetailsCache = cacheManager.getCache("userDetails");
 
         if (credentialCache != null) {
             credentialCache.put(emailAddress, credential);
         }
 
         if (userDetailsCache != null) {
-            UserDetails userDetails = createUserDetails(credential);
+            var userDetails = createUserDetails(credential);
             userDetailsCache.put(emailAddress, userDetails);
         }
     }
@@ -54,7 +53,7 @@ public class AuthCacheServiceImpl implements AuthCacheService {
 
     @Override
     public boolean existsCredential(String emailAddress) {
-        Cache credentialCache = cacheManager.getCache("credentials");
+        var credentialCache = cacheManager.getCache("credentials");
         if (credentialCache != null) {
             return redisTemplate.hasKey("credentials::" + emailAddress);
         }
